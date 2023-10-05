@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -8,7 +7,8 @@ import {
   ErrorMsg,
   AddBtn,
 } from './ContactForm.styled';
-import { getContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
 
 const nameRegExp = /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
 const phoneRegExp =
@@ -18,14 +18,12 @@ const phoneRegExpMsg = `Phone number must be digits and can contain spaces, dash
 
 const PhonebookSchema = Yup.object().shape({
   name: Yup.string().required('Required').matches(nameRegExp, nameRegExpMsg),
-  number: Yup.string()
-    .required('Required')
-    .matches(phoneRegExp, phoneRegExpMsg),
+  phone: Yup.string().required('Required').matches(phoneRegExp, phoneRegExpMsg),
 });
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const onAdd = newContact => {
     const isExist = contacts.some(
@@ -42,7 +40,7 @@ export const ContactForm = () => {
 
   return (
     <Formik
-      initialValues={{ name: '', number: '' }}
+      initialValues={{ name: '', phone: '' }}
       validationSchema={PhonebookSchema}
       onSubmit={(values, actions) => {
         onAdd(values);
@@ -52,8 +50,8 @@ export const ContactForm = () => {
       <StyledForm>
         <StyledField name="name" type="text" placeholder="Name" />
         <ErrorMsg name="name" component="div" />
-        <StyledField name="number" type="tel" placeholder="Phone number" />
-        <ErrorMsg name="number" component="div" />
+        <StyledField name="phone" type="tel" placeholder="Phone number" />
+        <ErrorMsg name="phone" component="div" />
         <AddBtn type="submit">Add contact</AddBtn>
       </StyledForm>
     </Formik>

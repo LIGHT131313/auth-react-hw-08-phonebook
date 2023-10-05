@@ -1,20 +1,29 @@
-import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { fetchContacts } from 'redux/operations';
 import { Layout } from './Layout';
 import { GlobalStyle } from './GlobalStyles';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
 import { ContactList } from './ContactList/ContactList';
+import { selectStore } from 'redux/selectors';
 
 export const App = () => {
-  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const { items, isLoading, error } = useSelector(selectStore);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <Layout>
       <h1>Phonebook</h1>
       <ContactForm />
       <h2>Contacts</h2>
-      {contacts.length ? (
+      {isLoading && !error && <b>Request in progress...</b>}
+      {items.length > 0 ? (
         <>
           <Filter />
           <ContactList />
@@ -22,6 +31,7 @@ export const App = () => {
       ) : (
         <p>Contact list is empty</p>
       )}
+
       <GlobalStyle />
     </Layout>
   );
