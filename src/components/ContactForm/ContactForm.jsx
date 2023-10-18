@@ -7,51 +7,59 @@ import {
   ErrorMsg,
   AddBtn,
 } from './ContactForm.styled';
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/operations';
+import { selectContacts } from 'redux/contacts/selectors';
+import { addContact } from 'redux/contacts/operations';
 
 const nameRegExp = /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
-const phoneRegExp =
+const numberRegExp =
   /\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/;
 const nameRegExpMsg = `Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan`;
-const phoneRegExpMsg = `Phone number must be digits and can contain spaces, dashes, parentheses and can start with +`;
+const numberRegExpMsg = `Phone number must be digits and can contain spaces, dashes, parentheses and can start with +`;
 
-const PhonebookSchema = Yup.object().shape({
+export const ContactFormSchema = Yup.object().shape({
   name: Yup.string().required('Required').matches(nameRegExp, nameRegExpMsg),
-  phone: Yup.string().required('Required').matches(phoneRegExp, phoneRegExpMsg),
+  number: Yup.string()
+    .required('Required')
+    .matches(numberRegExp, numberRegExpMsg),
 });
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
 
-  const onAdd = newContact => {
-    const isExist = contacts.some(
+  const onAdd = (newContact, actions) => {
+    const isExistName = contacts.some(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
+    const isExistNumber = contacts.some(
+      contact => contact.number === newContact.number
+    );
 
-    if (isExist) {
-      alert(`${newContact.name} is already in contacts.`);
+    if (isExistName) {
+      alert(`Name ${newContact.name} is already in contacts.`);
+      return;
+    }
+
+    if (isExistNumber) {
+      alert(`Number ${newContact.number} is already in contacts.`);
       return;
     }
 
     dispatch(addContact(newContact));
+    actions.resetForm();
   };
 
   return (
     <Formik
-      initialValues={{ name: '', phone: '' }}
-      validationSchema={PhonebookSchema}
-      onSubmit={(values, actions) => {
-        onAdd(values);
-        actions.resetForm();
-      }}
+      initialValues={{ name: '', number: '' }}
+      validationSchema={ContactFormSchema}
+      onSubmit={(values, actions) => onAdd(values, actions)}
     >
       <StyledForm>
         <StyledField name="name" type="text" placeholder="Name" />
         <ErrorMsg name="name" component="div" />
-        <StyledField name="phone" type="tel" placeholder="Phone number" />
-        <ErrorMsg name="phone" component="div" />
+        <StyledField name="number" type="tel" placeholder="Phone number" />
+        <ErrorMsg name="number" component="div" />
         <AddBtn type="submit">Add contact</AddBtn>
       </StyledForm>
     </Formik>

@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import { BrowserRouter } from 'react-router-dom';
+import { store, persistor } from './redux/store';
 import { ThemeProvider } from 'styled-components';
+import { PersistGate } from 'redux-persist/integration/react';
 import { App } from 'components/App';
 
 const theme = {
   colors: {
     beige: 'beige',
-    white: '#fff',
-    red: 'red',
-    green: '#a3d0c3',
+    white: 'rgb(0, 0, 0)',
+    red: 'rgb(249, 62, 62)',
+    green: 'rgb(158, 235, 207)',
     grey: 'grey',
   },
   borRad: '4px 4px 4px 4px',
@@ -26,7 +28,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <App />
+        <PersistGate loading={null} persistor={persistor}>
+          <BrowserRouter basename="/goit-react-hw-08-phonebook">
+            <App />
+          </BrowserRouter>
+        </PersistGate>
       </ThemeProvider>
     </Provider>
   </React.StrictMode>

@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 
 export const ListItem = styled.li`
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
   &:not(:last-child) {
     border-bottom: 1px solid ${p => p.theme.colors.grey};
   }
 
   &:hover,
   &:focus {
-    transform: scale(1.03);
+    transform: scale(1.02);
   }
 `;
 export const ListItemText = styled.p`
@@ -20,8 +22,13 @@ export const ListPhone = styled.span`
   font-size: 12px;
   text-align: end;
 `;
+export const BtnWrapper = styled.span`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
-export const ListBtn = styled.button`
+export const ListItemBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,6 +43,10 @@ export const ListBtn = styled.button`
   cursor: pointer;
   color: #f44336;
   transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:not(:last-child) {
+    margin-right: 4px;
+  }
 
   &:hover,
   &:focus {
