@@ -2,7 +2,7 @@
   "name": "react-homework-template",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://LIGHT131313.github.io/auth-react-hw-08-phonebook/",
+  "homepage": "https://LIGHT131313.github.io/auth-redux-react-hw-08-phonebook/",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
